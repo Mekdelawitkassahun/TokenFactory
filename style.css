@@ -356,12 +356,6 @@ button:disabled {
     color: #8b92b0;
 }
 
-.grid-2 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-}
-
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -387,10 +381,6 @@ button:disabled {
     }
     
     .token-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .grid-2 {
         grid-template-columns: 1fr;
     }
     
