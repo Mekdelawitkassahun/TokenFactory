@@ -369,13 +369,6 @@ async function loadAllTokens() {
                         <span class="label">Created</span>
                         <span class="value">${formattedDate}</span>
                     </div>
-                    <div class="token-detail">
-                        <span class="label">Burn Token</span>
-                        <div>
-                            <input type="number" id="burnAmount_${i}" placeholder="Amount to burn" style="flex: 1;">
-                            <button onclick="burnToken('${fullTokenAddress}', '${escapeHtml(token.symbol)}', ${i})" class="burn-btn">🔥 Burn</button>
-                        </div>
-                    </div>
                     <button onclick="addToMetaMask('${fullTokenAddress}', '${escapeHtml(token.symbol)}')" class="metamask-btn">🦊 Add to MetaMask</button>
                 </div>
             `;
@@ -388,17 +381,22 @@ async function loadAllTokens() {
     }
 }
 
-async function burnToken(tokenAddress, tokenSymbol, index) {
-    if (!account) {
+async function burnTokens() {
+    if (!factory || !account) {
         alert('Please connect first!');
         return;
     }
     
-    const amountInput = document.getElementById(`burnAmount_${index}`);
-    const amount = amountInput.value;
+    const tokenAddress = document.getElementById('burnTokenAddress').value;
+    const amount = document.getElementById('burnAmount').value;
     
-    if (!amount || amount <= 0) {
-        alert('Please enter a valid amount to burn');
+    if (!tokenAddress || !amount) {
+        alert('Please enter token address and amount');
+        return;
+    }
+    
+    if (amount <= 0) {
+        alert('Amount must be greater than 0');
         return;
     }
     
@@ -409,6 +407,9 @@ async function burnToken(tokenAddress, tokenSymbol, index) {
         {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
     ];
     
+    const burnBtn = document.getElementById('burnBtn');
+    burnBtn.disabled = true;
+    burnBtn.innerHTML = '🔥 Burning...';
     document.getElementById('status').innerHTML = '⏳ Burning tokens...';
     document.getElementById('status').className = 'status loading';
     
@@ -422,20 +423,24 @@ async function burnToken(tokenAddress, tokenSymbol, index) {
         }
         
         const amountWei = web3.utils.toWei(amount, 'ether');
+        const symbol = await token.methods.symbol().call();
         
         await token.methods.burn(amountWei).send({ from: account });
         
-        document.getElementById('status').innerHTML = `✅ Successfully burned ${amount} ${tokenSymbol} tokens!`;
+        document.getElementById('status').innerHTML = `✅ Successfully burned ${amount} ${symbol} tokens!`;
         document.getElementById('status').className = 'status connected';
-        amountInput.value = '';
+        document.getElementById('burnTokenAddress').value = '';
+        document.getElementById('burnAmount').value = '';
         
-        // Reload tokens to show updated supply
         await loadAllTokens();
         
     } catch (error) {
         console.error(error);
         document.getElementById('status').innerHTML = '❌ Burn failed: ' + error.message;
         document.getElementById('status').className = 'status disconnected';
+    } finally {
+        burnBtn.disabled = false;
+        burnBtn.innerHTML = '🔥 Burn Tokens';
     }
 }
 
