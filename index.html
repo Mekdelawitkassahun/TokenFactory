@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Factory | Create Your Own Cryptocurrency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="container">
+        <div class="header">
+            <h1>🏭 Token Factory</h1>
+            <p>Create your own ERC-20 tokens on the blockchain in seconds</p>
+        </div>
+        
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-number" id="tokenCount">0</div>
+                <div class="stat-label">Total Tokens Created</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="networkName">Sepolia</div>
+                <div class="stat-label">Network</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statusBadge">⚡</div>
+                <div class="stat-label">Status</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <h2><span>🔌</span> Connect Wallet</h2>
+                    <p style="color: #8b92b0; font-size: 14px;">Connect your MetaMask to start creating tokens</p>
+                </div>
+                <button id="connectBtn" onclick="connectWallet()" style="width: auto; padding: 12px 32px; margin: 0;">Connect MetaMask</button>
+            </div>
+            <div id="accountInfo" class="account-info" style="display: none;"></div>
+            <div id="status" class="status disconnected">⚠️ Not Connected</div>
+        </div>
+        
+        <div class="card">
+            <h2><span>✨</span> Create New Token</h2>
+            <div class="input-group">
+                <label>Token Name</label>
+                <input type="text" id="tokenName" placeholder="e.g., My Awesome Token">
+            </div>
+            <div class="input-group">
+                <label>Token Symbol</label>
+                <input type="text" id="tokenSymbol" placeholder="e.g., MAT">
+            </div>
+            <div class="input-group">
+                <label>Initial Supply</label>
+                <input type="number" id="tokenSupply" placeholder="e.g., 1000000">
+            </div>
+            <button id="createBtn" onclick="createToken()">🚀 Create Token</button>
+        </div>
+        
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+                <h2><span>📋</span> All Created Tokens</h2>
+                <button onclick="loadAllTokens()" style="width: auto; padding: 8px 20px; margin: 0;">🔄 Refresh</button>
+            </div>
+            <div id="tokensList" class="token-grid">
+                <div class="empty-state">✨ No tokens created yet. Create your first token above!</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
