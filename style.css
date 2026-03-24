@@ -218,6 +218,18 @@ button:disabled {
     box-shadow: none;
 }
 
+.burn-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    width: auto;
+    padding: 8px 16px;
+    margin: 0;
+    font-size: 14px;
+}
+
+.burn-btn:hover {
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+}
+
 .metamask-btn {
     margin-top: 12px;
     background: linear-gradient(135deg, #f6851b, #e2761b);
@@ -350,6 +362,13 @@ button:disabled {
     flex-wrap: wrap;
 }
 
+.token-detail input {
+    padding: 8px 12px;
+    font-size: 12px;
+    margin: 0;
+    flex: 1;
+}
+
 .empty-state {
     text-align: center;
     padding: 60px;
@@ -401,6 +420,15 @@ button:disabled {
     
     .stat-number {
         font-size: 28px;
+    }
+    
+    .token-detail div {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .burn-btn {
+        width: 100%;
     }
 }
 
