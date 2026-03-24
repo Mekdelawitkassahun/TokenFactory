@@ -12,13 +12,13 @@
     <div class="container">
         <div class="header">
             <h1>🏭 Token Factory</h1>
-            <p>Create your own ERC-20 tokens on the blockchain in seconds</p>
+            <p>Create your own ERC-20 tokens on the blockchain</p>
         </div>
         
-        <div class="stats-grid" id="statsGrid">
+        <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number" id="tokenCount">0</div>
-                <div class="stat-label">Total Tokens Created</div>
+                <div class="stat-label">Total Tokens</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="networkName">Sepolia</div>
@@ -31,12 +31,12 @@
         </div>
         
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div class="flex-between">
                 <div>
                     <h2><span>🔌</span> Connect Wallet</h2>
-                    <p style="color: #8b92b0; font-size: 14px;">Connect your MetaMask to start creating tokens</p>
+                    <p class="text-secondary">Connect your MetaMask to start creating tokens</p>
                 </div>
-                <button id="connectBtn" onclick="connectWallet()" style="width: auto; padding: 12px 32px; margin: 0;">Connect MetaMask</button>
+                <button id="connectBtn" onclick="connectWallet()" class="btn-connect">Connect MetaMask</button>
             </div>
             <div id="accountInfo" class="account-info" style="display: none;"></div>
             <div id="status" class="status disconnected">⚠️ Not Connected</div>
@@ -60,13 +60,27 @@
         </div>
         
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+            <div class="flex-between">
                 <h2><span>📋</span> All Created Tokens</h2>
-                <button onclick="loadAllTokens()" style="width: auto; padding: 8px 20px; margin: 0;">🔄 Refresh</button>
+                <button onclick="loadAllTokens()" class="btn-small">🔄 Refresh</button>
             </div>
             <div id="tokensList" class="token-grid">
                 <div class="empty-state">✨ No tokens created yet. Create your first token above!</div>
             </div>
+        </div>
+        
+        <div class="card">
+            <h2><span>🔥</span> Burn Tokens</h2>
+            <p class="text-secondary">Permanently destroy tokens from circulation (Owner Only)</p>
+            <div class="input-group">
+                <label>Token Contract Address</label>
+                <input type="text" id="burnTokenAddress" placeholder="0x... full token contract address">
+            </div>
+            <div class="input-group">
+                <label>Amount to Burn</label>
+                <input type="number" id="burnAmount" placeholder="Amount to destroy">
+            </div>
+            <button id="burnBtn" onclick="burnTokens()">🔥 Burn Tokens</button>
         </div>
     </div>
 
