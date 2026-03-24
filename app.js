@@ -4,224 +4,14 @@ let web3, factory, account;
 const factoryAddress = "0x1640E0C8D3436B7e02FFEedfF0c70554F8d0955B";
 
 const factoryABI = [
-    {
-        "inputs": [],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "tokenAddress",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "creator",
-                "type": "address"
-            }
-        ],
-        "name": "TokenCreated",
-        "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_symbol",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_supply",
-                "type": "uint256"
-            }
-        ],
-        "name": "createToken",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getAllTokens",
-        "outputs": [
-            {
-                "components": [
-                    {
-                        "internalType": "address",
-                        "name": "tokenAddress",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "name",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "symbol",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "supply",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "creator",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "createdAt",
-                        "type": "uint256"
-                    }
-                ],
-                "internalType": "struct TokenFactory.TokenInfo[]",
-                "name": "",
-                "type": "tuple[]"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getTokenCount",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_user",
-                "type": "address"
-            }
-        ],
-        "name": "getUserTokens",
-        "outputs": [
-            {
-                "internalType": "uint256[]",
-                "name": "",
-                "type": "uint256[]"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "owner",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "tokenCount",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "tokens",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "tokenAddress",
-                "type": "address"
-            },
-            {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
-            },
-            {
-                "internalType": "uint256",
-                "name": "supply",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address",
-                "name": "creator",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "createdAt",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    }
+    {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
+    {"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"},{"indexed":true,"internalType":"address","name":"tokenAddress","type":"address"},{"indexed":false,"internalType":"string","name":"name","type":"string"},{"indexed":false,"internalType":"string","name":"symbol","type":"string"},{"indexed":true,"internalType":"address","name":"creator","type":"address"}],"name":"TokenCreated","type":"event"},
+    {"inputs":[{"internalType":"string","name":"_name","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"uint256","name":"_supply","type":"uint256"}],"name":"createToken","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"nonpayable","type":"function"},
+    {"inputs":[],"name":"getAllTokens","outputs":[{"components":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"symbol","type":"string"},{"internalType":"uint256","name":"supply","type":"uint256"},{"internalType":"address","name":"creator","type":"address"},{"internalType":"uint256","name":"createdAt","type":"uint256"}],"internalType":"struct TokenFactory.TokenInfo[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},
+    {"inputs":[],"name":"getTokenCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+    {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+    {"inputs":[],"name":"tokenCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+    {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokens","outputs":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"symbol","type":"string"},{"internalType":"uint256","name":"supply","type":"uint256"},{"internalType":"address","name":"creator","type":"address"},{"internalType":"uint256","name":"createdAt","type":"uint256"}],"stateMutability":"view","type":"function"}
 ];
 
 async function connectWallet() {
@@ -236,7 +26,6 @@ async function connectWallet() {
         account = accounts[0];
         web3 = new Web3(window.ethereum);
         
-        console.log("Connecting to contract at:", factoryAddress);
         factory = new web3.eth.Contract(factoryABI, factoryAddress);
         
         document.getElementById('accountInfo').innerHTML = `🦊 Connected: ${account.substring(0,8)}...${account.substring(account.length - 6)}`;
@@ -261,9 +50,7 @@ async function updateStats() {
     try {
         const count = await factory.methods.getTokenCount().call();
         document.getElementById('tokenCount').innerHTML = count.toString();
-    } catch(e) {
-        console.log("Error getting token count:", e);
-    }
+    } catch(e) {}
 }
 
 async function createToken() {
@@ -328,35 +115,26 @@ async function loadAllTokens() {
             return;
         }
         
-        const tokenABI = [
-            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
-        ];
-        
         let html = '';
         for (let i = 0; i < count; i++) {
             const token = allTokens[i];
             const date = new Date(Number(token.createdAt) * 1000);
             const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
             
-            const fullCreatorAddress = token.creator;
-            const fullTokenAddress = token.tokenAddress;
-            
-            let currentSupplyFormatted = "Loading...";
+            // Get real supply from token contract
+            let realSupply = token.supply;
+            let realSupplyFormatted = Number(realSupply).toLocaleString();
             
             try {
-                const tokenContract = new web3.eth.Contract(tokenABI, fullTokenAddress);
-                const realSupplyWei = await tokenContract.methods.totalSupply().call();
-                const realSupply = Number(web3.utils.fromWei(realSupplyWei, 'ether'));
-                currentSupplyFormatted = realSupply.toLocaleString();
-            } catch(e) {
-                currentSupplyFormatted = Number(token.supply).toLocaleString();
-            }
+                const tokenABI = [{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
+                const tokenContract = new web3.eth.Contract(tokenABI, token.tokenAddress);
+                const supplyWei = await tokenContract.methods.totalSupply().call();
+                realSupply = Number(web3.utils.fromWei(supplyWei, 'ether'));
+                realSupplyFormatted = realSupply.toLocaleString();
+            } catch(e) {}
             
             html += `
-                <div class="token-card" id="token-card-${i}">
+                <div class="token-card" data-token-address="${token.tokenAddress}" data-token-symbol="${escapeHtml(token.symbol)}">
                     <div class="token-header">
                         <div class="token-icon">💰</div>
                         <div>
@@ -366,20 +144,20 @@ async function loadAllTokens() {
                     </div>
                     <div class="token-detail">
                         <span class="label">Current Supply</span>
-                        <span class="value" id="supply-${i}">${currentSupplyFormatted} ${escapeHtml(token.symbol)}</span>
+                        <span class="value supply-value">${realSupplyFormatted} ${escapeHtml(token.symbol)}</span>
                     </div>
                     <div class="token-detail">
                         <span class="label">Creator</span>
                         <div>
-                            <span class="value" style="font-size: 12px; word-break: break-all;">${fullCreatorAddress}</span>
-                            <button onclick="copyToClipboard('${fullCreatorAddress}')" class="copy-btn">📋 Copy</button>
+                            <span class="value">${token.creator.substring(0,10)}...${token.creator.substring(token.creator.length - 8)}</span>
+                            <button onclick="copyToClipboard('${token.creator}')" class="copy-btn">📋 Copy</button>
                         </div>
                     </div>
                     <div class="token-detail">
                         <span class="label">Contract Address</span>
                         <div>
-                            <span class="value" style="font-size: 12px; word-break: break-all;">${fullTokenAddress}</span>
-                            <button onclick="copyToClipboard('${fullTokenAddress}')" class="copy-btn">📋 Copy</button>
+                            <span class="value">${token.tokenAddress.substring(0,10)}...${token.tokenAddress.substring(token.tokenAddress.length - 8)}</span>
+                            <button onclick="copyToClipboard('${token.tokenAddress}')" class="copy-btn">📋 Copy</button>
                         </div>
                     </div>
                     <div class="token-detail">
@@ -388,12 +166,12 @@ async function loadAllTokens() {
                     </div>
                     <div class="token-detail">
                         <span class="label">Burn Tokens</span>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="number" id="burn-amount-${i}" placeholder="Amount to burn" style="flex: 1;">
-                            <button onclick="burnTokenFromCard('${fullTokenAddress}', '${escapeHtml(token.symbol)}', ${i})" class="burn-btn" style="width: auto;">🔥 Burn</button>
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                            <input type="number" class="burn-amount" placeholder="Amount to burn" style="flex: 1;">
+                            <button onclick="burnTokenFromCard(this)" class="burn-btn" style="width: auto;">🔥 Burn</button>
                         </div>
                     </div>
-                    <button onclick="addToMetaMask('${fullTokenAddress}', '${escapeHtml(token.symbol)}')" class="metamask-btn">🦊 Add to MetaMask</button>
+                    <button onclick="addToMetaMask('${token.tokenAddress}', '${escapeHtml(token.symbol)}')" class="metamask-btn">🦊 Add to MetaMask</button>
                 </div>
             `;
         }
@@ -405,13 +183,16 @@ async function loadAllTokens() {
     }
 }
 
-async function burnTokenFromCard(tokenAddress, tokenSymbol, cardIndex) {
+async function burnTokenFromCard(buttonElement) {
     if (!account) {
         alert('Please connect first!');
         return;
     }
     
-    const amountInput = document.getElementById(`burn-amount-${cardIndex}`);
+    const tokenCard = buttonElement.closest('.token-card');
+    const tokenAddress = tokenCard.getAttribute('data-token-address');
+    const tokenSymbol = tokenCard.getAttribute('data-token-symbol');
+    const amountInput = tokenCard.querySelector('.burn-amount');
     const amount = amountInput.value;
     
     if (!amount || amount <= 0) {
@@ -424,9 +205,8 @@ async function burnTokenFromCard(tokenAddress, tokenSymbol, cardIndex) {
         {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
     ];
     
-    const burnBtn = event.target;
-    burnBtn.disabled = true;
-    burnBtn.innerHTML = '🔥 Burning...';
+    buttonElement.disabled = true;
+    buttonElement.innerHTML = '🔥 Burning...';
     document.getElementById('status').innerHTML = `⏳ Burning ${amount} ${tokenSymbol}...`;
     document.getElementById('status').className = 'status loading';
     
@@ -443,41 +223,28 @@ async function burnTokenFromCard(tokenAddress, tokenSymbol, cardIndex) {
         
         await token.methods.burn(amountWei).send({ from: account });
         
-        document.getElementById('status').innerHTML = `✅ Successfully burned ${amount} ${tokenSymbol} tokens!`;
+        // Get new supply
+        const supplyABI = [{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
+        const supplyContract = new web3.eth.Contract(supplyABI, tokenAddress);
+        const newSupplyWei = await supplyContract.methods.totalSupply().call();
+        const newSupply = Number(web3.utils.fromWei(newSupplyWei, 'ether'));
+        const newSupplyFormatted = newSupply.toLocaleString();
+        
+        // Update the supply in the UI
+        const supplyElement = tokenCard.querySelector('.supply-value');
+        supplyElement.innerHTML = `${newSupplyFormatted} ${tokenSymbol}`;
+        
+        document.getElementById('status').innerHTML = `✅ Successfully burned ${amount} ${tokenSymbol} tokens! New supply: ${newSupplyFormatted}`;
         document.getElementById('status').className = 'status connected';
         amountInput.value = '';
-        
-        await updateSingleTokenSupply(tokenAddress, cardIndex, tokenSymbol);
         
     } catch (error) {
         console.error(error);
         document.getElementById('status').innerHTML = '❌ Burn failed: ' + error.message;
         document.getElementById('status').className = 'status disconnected';
     } finally {
-        burnBtn.disabled = false;
-        burnBtn.innerHTML = '🔥 Burn';
-    }
-}
-
-async function updateSingleTokenSupply(tokenAddress, cardIndex, tokenSymbol) {
-    const tokenABI = [
-        {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
-    ];
-    
-    try {
-        const token = new web3.eth.Contract(tokenABI, tokenAddress);
-        const supplyWei = await token.methods.totalSupply().call();
-        const supply = Number(web3.utils.fromWei(supplyWei, 'ether'));
-        const supplyFormatted = supply.toLocaleString();
-        
-        const supplyElement = document.getElementById(`supply-${cardIndex}`);
-        if (supplyElement) {
-            supplyElement.innerHTML = `${supplyFormatted} ${tokenSymbol}`;
-        }
-        
-        console.log(`Updated ${tokenSymbol} supply: ${supplyFormatted}`);
-    } catch (error) {
-        console.error("Error updating supply:", error);
+        buttonElement.disabled = false;
+        buttonElement.innerHTML = '🔥 Burn';
     }
 }
 
@@ -531,6 +298,7 @@ async function burnTokens() {
         document.getElementById('burnTokenAddress').value = '';
         document.getElementById('burnAmount').value = '';
         
+        // Refresh all tokens to show updated supply
         await loadAllTokens();
         
     } catch (error) {
@@ -585,11 +353,6 @@ async function addToMetaMask(tokenAddress, tokenSymbol) {
         if (wasAdded) {
             document.getElementById('status').innerHTML = `✅ ${tokenSymbol} added to MetaMask!`;
             document.getElementById('status').className = 'status connected';
-            setTimeout(() => {
-                if (factory && account) {
-                    document.getElementById('status').innerHTML = '✅ Connected to Token Factory';
-                }
-            }, 3000);
         } else {
             document.getElementById('status').innerHTML = '❌ User rejected';
         }
