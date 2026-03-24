@@ -1,9 +1,8 @@
 let web3, factory, account;
 
-// Your deployed contract address - REPLACED with your actual address
+// YOUR ACTUAL CONTRACT ADDRESS
 const factoryAddress = "0x1640E0C8D3436B7e02FFEedfF0c70554F8d0955B";
 
-// Correct ABI for your TokenFactory contract
 const factoryABI = [
     {
         "inputs": [],
@@ -337,6 +336,7 @@ async function loadAllTokens() {
             
             const fullCreatorAddress = token.creator;
             const fullTokenAddress = token.tokenAddress;
+            const currentSupply = Number(token.supply).toLocaleString();
             
             html += `
                 <div class="token-card">
@@ -348,8 +348,8 @@ async function loadAllTokens() {
                         </div>
                     </div>
                     <div class="token-detail">
-                        <span class="label">Supply</span>
-                        <span class="value">${Number(token.supply).toLocaleString()} ${escapeHtml(token.symbol)}</span>
+                        <span class="label">Initial Supply</span>
+                        <span class="value">${currentSupply} ${escapeHtml(token.symbol)}</span>
                     </div>
                     <div class="token-detail">
                         <span class="label">Creator</span>
@@ -369,6 +369,13 @@ async function loadAllTokens() {
                         <span class="label">Created</span>
                         <span class="value">${formattedDate}</span>
                     </div>
+                    <div class="token-detail">
+                        <span class="label">Burn Token</span>
+                        <div>
+                            <input type="number" id="burnAmount_${i}" placeholder="Amount to burn" style="flex: 1;">
+                            <button onclick="burnToken('${fullTokenAddress}', '${escapeHtml(token.symbol)}', ${i})" class="burn-btn">🔥 Burn</button>
+                        </div>
+                    </div>
                     <button onclick="addToMetaMask('${fullTokenAddress}', '${escapeHtml(token.symbol)}')" class="metamask-btn">🦊 Add to MetaMask</button>
                 </div>
             `;
@@ -381,34 +388,27 @@ async function loadAllTokens() {
     }
 }
 
-async function burnTokens() {
-    if (!factory || !account) {
+async function burnToken(tokenAddress, tokenSymbol, index) {
+    if (!account) {
         alert('Please connect first!');
         return;
     }
     
-    const tokenAddress = document.getElementById('burnTokenAddress').value;
-    const amount = document.getElementById('burnAmount').value;
+    const amountInput = document.getElementById(`burnAmount_${index}`);
+    const amount = amountInput.value;
     
-    if (!tokenAddress || !amount) {
-        alert('Please enter token address and amount');
-        return;
-    }
-    
-    if (amount <= 0) {
-        alert('Amount must be greater than 0');
+    if (!amount || amount <= 0) {
+        alert('Please enter a valid amount to burn');
         return;
     }
     
     const tokenABI = [
         {"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},
         {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-        {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}
+        {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+        {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
     ];
     
-    const burnBtn = document.getElementById('burnBtn');
-    burnBtn.disabled = true;
-    burnBtn.innerHTML = '🔥 Burning...';
     document.getElementById('status').innerHTML = '⏳ Burning tokens...';
     document.getElementById('status').className = 'status loading';
     
@@ -422,24 +422,20 @@ async function burnTokens() {
         }
         
         const amountWei = web3.utils.toWei(amount, 'ether');
-        const symbol = await token.methods.symbol().call();
         
         await token.methods.burn(amountWei).send({ from: account });
         
-        document.getElementById('status').innerHTML = `✅ Successfully burned ${amount} ${symbol} tokens!`;
+        document.getElementById('status').innerHTML = `✅ Successfully burned ${amount} ${tokenSymbol} tokens!`;
         document.getElementById('status').className = 'status connected';
-        document.getElementById('burnTokenAddress').value = '';
-        document.getElementById('burnAmount').value = '';
+        amountInput.value = '';
         
+        // Reload tokens to show updated supply
         await loadAllTokens();
         
     } catch (error) {
         console.error(error);
         document.getElementById('status').innerHTML = '❌ Burn failed: ' + error.message;
         document.getElementById('status').className = 'status disconnected';
-    } finally {
-        burnBtn.disabled = false;
-        burnBtn.innerHTML = '🔥 Burn Tokens';
     }
 }
 
