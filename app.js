@@ -1,6 +1,6 @@
 let web3, factory, account;
 
-// YOUR ACTUAL CONTRACT ADDRESS - REPLACED
+// YOUR ACTUAL CONTRACT ADDRESS
 const factoryAddress = "0x1640E0C8D3436B7e02FFEedfF0c70554F8d0955B";
 
 const factoryABI = [
@@ -237,13 +237,7 @@ async function connectWallet() {
         web3 = new Web3(window.ethereum);
         
         console.log("Connecting to contract at:", factoryAddress);
-        
-        // Create contract instance
         factory = new web3.eth.Contract(factoryABI, factoryAddress);
-        
-        // Test if contract exists
-        const test = await factory.methods.getTokenCount().call().catch(e => console.log("Test failed:", e));
-        console.log("Contract test result:", test);
         
         document.getElementById('accountInfo').innerHTML = `🦊 Connected: ${account.substring(0,8)}...${account.substring(account.length - 6)}`;
         document.getElementById('accountInfo').style.display = 'inline-flex';
@@ -257,7 +251,7 @@ async function connectWallet() {
         window.ethereum.on('accountsChanged', () => connectWallet());
         
     } catch (error) {
-        console.error("Connection error:", error);
+        console.error(error);
         document.getElementById('status').innerHTML = '❌ Connection failed: ' + error.message;
     }
 }
@@ -334,6 +328,13 @@ async function loadAllTokens() {
             return;
         }
         
+        const tokenABI = [
+            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+        ];
+        
         let html = '';
         for (let i = 0; i < count; i++) {
             const token = allTokens[i];
@@ -343,8 +344,19 @@ async function loadAllTokens() {
             const fullCreatorAddress = token.creator;
             const fullTokenAddress = token.tokenAddress;
             
+            let currentSupplyFormatted = "Loading...";
+            
+            try {
+                const tokenContract = new web3.eth.Contract(tokenABI, fullTokenAddress);
+                const realSupplyWei = await tokenContract.methods.totalSupply().call();
+                const realSupply = Number(web3.utils.fromWei(realSupplyWei, 'ether'));
+                currentSupplyFormatted = realSupply.toLocaleString();
+            } catch(e) {
+                currentSupplyFormatted = Number(token.supply).toLocaleString();
+            }
+            
             html += `
-                <div class="token-card">
+                <div class="token-card" id="token-card-${i}">
                     <div class="token-header">
                         <div class="token-icon">💰</div>
                         <div>
@@ -353,8 +365,8 @@ async function loadAllTokens() {
                         </div>
                     </div>
                     <div class="token-detail">
-                        <span class="label">Supply</span>
-                        <span class="value">${Number(token.supply).toLocaleString()} ${escapeHtml(token.symbol)}</span>
+                        <span class="label">Current Supply</span>
+                        <span class="value" id="supply-${i}">${currentSupplyFormatted} ${escapeHtml(token.symbol)}</span>
                     </div>
                     <div class="token-detail">
                         <span class="label">Creator</span>
@@ -374,6 +386,13 @@ async function loadAllTokens() {
                         <span class="label">Created</span>
                         <span class="value">${formattedDate}</span>
                     </div>
+                    <div class="token-detail">
+                        <span class="label">Burn Tokens</span>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="number" id="burn-amount-${i}" placeholder="Amount to burn" style="flex: 1;">
+                            <button onclick="burnTokenFromCard('${fullTokenAddress}', '${escapeHtml(token.symbol)}', ${i})" class="burn-btn" style="width: auto;">🔥 Burn</button>
+                        </div>
+                    </div>
                     <button onclick="addToMetaMask('${fullTokenAddress}', '${escapeHtml(token.symbol)}')" class="metamask-btn">🦊 Add to MetaMask</button>
                 </div>
             `;
@@ -383,6 +402,82 @@ async function loadAllTokens() {
     } catch (error) {
         console.error(error);
         document.getElementById('tokensList').innerHTML = '<div class="empty-state">❌ Error loading tokens. Make sure you are connected to Sepolia network.</div>';
+    }
+}
+
+async function burnTokenFromCard(tokenAddress, tokenSymbol, cardIndex) {
+    if (!account) {
+        alert('Please connect first!');
+        return;
+    }
+    
+    const amountInput = document.getElementById(`burn-amount-${cardIndex}`);
+    const amount = amountInput.value;
+    
+    if (!amount || amount <= 0) {
+        alert('Please enter a valid amount to burn');
+        return;
+    }
+    
+    const tokenABI = [
+        {"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},
+        {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+    ];
+    
+    const burnBtn = event.target;
+    burnBtn.disabled = true;
+    burnBtn.innerHTML = '🔥 Burning...';
+    document.getElementById('status').innerHTML = `⏳ Burning ${amount} ${tokenSymbol}...`;
+    document.getElementById('status').className = 'status loading';
+    
+    try {
+        const token = new web3.eth.Contract(tokenABI, tokenAddress);
+        const tokenOwner = await token.methods.owner().call();
+        
+        if (tokenOwner.toLowerCase() !== account.toLowerCase()) {
+            alert('❌ Only the token creator can burn tokens!');
+            throw new Error('Not token owner');
+        }
+        
+        const amountWei = web3.utils.toWei(amount, 'ether');
+        
+        await token.methods.burn(amountWei).send({ from: account });
+        
+        document.getElementById('status').innerHTML = `✅ Successfully burned ${amount} ${tokenSymbol} tokens!`;
+        document.getElementById('status').className = 'status connected';
+        amountInput.value = '';
+        
+        await updateSingleTokenSupply(tokenAddress, cardIndex, tokenSymbol);
+        
+    } catch (error) {
+        console.error(error);
+        document.getElementById('status').innerHTML = '❌ Burn failed: ' + error.message;
+        document.getElementById('status').className = 'status disconnected';
+    } finally {
+        burnBtn.disabled = false;
+        burnBtn.innerHTML = '🔥 Burn';
+    }
+}
+
+async function updateSingleTokenSupply(tokenAddress, cardIndex, tokenSymbol) {
+    const tokenABI = [
+        {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+    ];
+    
+    try {
+        const token = new web3.eth.Contract(tokenABI, tokenAddress);
+        const supplyWei = await token.methods.totalSupply().call();
+        const supply = Number(web3.utils.fromWei(supplyWei, 'ether'));
+        const supplyFormatted = supply.toLocaleString();
+        
+        const supplyElement = document.getElementById(`supply-${cardIndex}`);
+        if (supplyElement) {
+            supplyElement.innerHTML = `${supplyFormatted} ${tokenSymbol}`;
+        }
+        
+        console.log(`Updated ${tokenSymbol} supply: ${supplyFormatted}`);
+    } catch (error) {
+        console.error("Error updating supply:", error);
     }
 }
 
