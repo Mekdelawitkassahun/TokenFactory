@@ -1,6 +1,6 @@
 let web3, factory, account;
 
-// Your deployed contract address
+// Your deployed contract address - REPLACED with your actual address
 const factoryAddress = "0x1640E0C8D3436B7e02FFEedfF0c70554F8d0955B";
 
 // Correct ABI for your TokenFactory contract
@@ -236,6 +236,8 @@ async function connectWallet() {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         account = accounts[0];
         web3 = new Web3(window.ethereum);
+        
+        console.log("Connecting to contract at:", factoryAddress);
         factory = new web3.eth.Contract(factoryABI, factoryAddress);
         
         document.getElementById('accountInfo').innerHTML = `🦊 Connected: ${account.substring(0,8)}...${account.substring(account.length - 6)}`;
@@ -260,7 +262,9 @@ async function updateStats() {
     try {
         const count = await factory.methods.getTokenCount().call();
         document.getElementById('tokenCount').innerHTML = count.toString();
-    } catch(e) {}
+    } catch(e) {
+        console.log("Error getting token count:", e);
+    }
 }
 
 async function createToken() {
@@ -331,7 +335,6 @@ async function loadAllTokens() {
             const date = new Date(Number(token.createdAt) * 1000);
             const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
             
-            // FULL addresses - NO truncation
             const fullCreatorAddress = token.creator;
             const fullTokenAddress = token.tokenAddress;
             
@@ -497,6 +500,7 @@ async function addToMetaMask(tokenAddress, tokenSymbol) {
 }
 
 function escapeHtml(str) {
+    if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
         if (m === '&') return '&amp;';
         if (m === '<') return '&lt;';
