@@ -1,6 +1,6 @@
 let web3, factory, account;
 
-// YOUR ACTUAL CONTRACT ADDRESS
+// YOUR ACTUAL CONTRACT ADDRESS - REPLACED
 const factoryAddress = "0x1640E0C8D3436B7e02FFEedfF0c70554F8d0955B";
 
 const factoryABI = [
@@ -237,7 +237,13 @@ async function connectWallet() {
         web3 = new Web3(window.ethereum);
         
         console.log("Connecting to contract at:", factoryAddress);
+        
+        // Create contract instance
         factory = new web3.eth.Contract(factoryABI, factoryAddress);
+        
+        // Test if contract exists
+        const test = await factory.methods.getTokenCount().call().catch(e => console.log("Test failed:", e));
+        console.log("Contract test result:", test);
         
         document.getElementById('accountInfo').innerHTML = `🦊 Connected: ${account.substring(0,8)}...${account.substring(account.length - 6)}`;
         document.getElementById('accountInfo').style.display = 'inline-flex';
@@ -251,7 +257,7 @@ async function connectWallet() {
         window.ethereum.on('accountsChanged', () => connectWallet());
         
     } catch (error) {
-        console.error(error);
+        console.error("Connection error:", error);
         document.getElementById('status').innerHTML = '❌ Connection failed: ' + error.message;
     }
 }
@@ -336,7 +342,6 @@ async function loadAllTokens() {
             
             const fullCreatorAddress = token.creator;
             const fullTokenAddress = token.tokenAddress;
-            const currentSupply = Number(token.supply).toLocaleString();
             
             html += `
                 <div class="token-card">
@@ -348,8 +353,8 @@ async function loadAllTokens() {
                         </div>
                     </div>
                     <div class="token-detail">
-                        <span class="label">Initial Supply</span>
-                        <span class="value">${currentSupply} ${escapeHtml(token.symbol)}</span>
+                        <span class="label">Supply</span>
+                        <span class="value">${Number(token.supply).toLocaleString()} ${escapeHtml(token.symbol)}</span>
                     </div>
                     <div class="token-detail">
                         <span class="label">Creator</span>
@@ -403,8 +408,7 @@ async function burnTokens() {
     const tokenABI = [
         {"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},
         {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-        {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-        {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+        {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}
     ];
     
     const burnBtn = document.getElementById('burnBtn');
