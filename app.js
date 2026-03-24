@@ -9,7 +9,7 @@ const factoryABI = [
     {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokens","outputs":[{"internalType":"address","name":"tokenAddress","type":"address"},{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"symbol","type":"string"},{"internalType":"uint256","name":"supply","type":"uint256"},{"internalType":"address","name":"creator","type":"address"},{"internalType":"uint256","name":"createdAt","type":"uint256"}],"stateMutability":"view","type":"function"}
 ];
 
-// Replace with your deployed contract address
+// REPLACE WITH YOUR DEPLOYED CONTRACT ADDRESS
 const factoryAddress = "YOUR_DEPLOYED_CONTRACT_ADDRESS";
 
 async function connectWallet() {
@@ -118,7 +118,7 @@ async function loadAllTokens() {
             const date = new Date(Number(token.createdAt) * 1000);
             const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
             
-            // Full addresses - not shortened
+            // FULL addresses - NO truncation
             const fullCreatorAddress = token.creator;
             const fullTokenAddress = token.tokenAddress;
             
@@ -137,14 +137,14 @@ async function loadAllTokens() {
                     </div>
                     <div class="token-detail">
                         <span class="label">Creator</span>
-                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <div>
                             <span class="value" style="font-size: 12px; word-break: break-all;">${fullCreatorAddress}</span>
                             <button onclick="copyToClipboard('${fullCreatorAddress}')" class="copy-btn">📋 Copy</button>
                         </div>
                     </div>
                     <div class="token-detail">
                         <span class="label">Contract Address</span>
-                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <div>
                             <span class="value" style="font-size: 12px; word-break: break-all;">${fullTokenAddress}</span>
                             <button onclick="copyToClipboard('${fullTokenAddress}')" class="copy-btn">📋 Copy</button>
                         </div>
@@ -227,7 +227,6 @@ async function burnTokens() {
     }
 }
 
-// Copy to clipboard function
 async function copyToClipboard(text) {
     try {
         await navigator.clipboard.writeText(text);
@@ -248,7 +247,6 @@ async function copyToClipboard(text) {
     }
 }
 
-// Add token to MetaMask
 async function addToMetaMask(tokenAddress, tokenSymbol) {
     if (!window.ethereum) {
         alert('Please install MetaMask!');
