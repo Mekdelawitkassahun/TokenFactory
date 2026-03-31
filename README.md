@@ -3,7 +3,7 @@ Token Factory
 A decentralized application for creating custom ERC-20 tokens on the Ethereum blockchain.
 
 Live Demo
-https://mekdelawittkassahun.github.io/TokenFactory/
+https://mekdelawitkassahun.github.io/TokenFactory/
 
 Overview
 Token Factory allows users to deploy their own ERC-20 tokens without writing any code. The application consists of a Solidity smart contract deployed on the Sepolia testnet and a web interface that connects via MetaMask.
